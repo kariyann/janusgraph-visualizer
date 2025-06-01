@@ -18,7 +18,7 @@ const initialState = {
   }
 };
 
-export default function optionReducer(state = initialState, action) {
+export const reducer = function optionReducer(state = initialState, action) {
   switch (action.type) {
     case ACTIONS.ADD_QUERY_HISTORY:
       return {
@@ -87,3 +87,5 @@ export default function optionReducer(state = initialState, action) {
       return state;
   }
 }
+
+export default reducer;

@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 
 import { reducer as gremlinReducer } from './reducers/gremlinReducer';
 import { reducer as graphReducer } from './reducers/graphReducer';
-import { reducer as optionReducer } from './reducers/optionReducer';
+import optionReducer from './reducers/optionReducer';
 import { App } from './App';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
