@@ -19,7 +19,8 @@ import {
   FormControlLabel,
   Switch,
   Divider,
-  Tooltip
+  Tooltip,
+  Button
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AddIcon from '@material-ui/icons/Add';
@@ -33,6 +34,7 @@ import { ACTIONS, COMMON_GREMLIN_ERROR, QUERY_ENDPOINT } from '../../constants';
 import axios from "axios";
 import { onFetchQuery} from '../../logics/actionHelper';
 import { stringifyObjectValues} from '../../logics/utils';
+import { SketchPicker } from 'react-color';
 
 class Details extends React.Component {
 
@@ -123,6 +125,18 @@ class Details extends React.Component {
         key: index
       })
     });
+  }
+
+  handleNodeStyleChange(index, field, value) {
+    const updatedStyles = [...this.props.graphStyles.nodeStyles];
+    updatedStyles[index][field] = value;
+    this.props.dispatch({ type: ACTIONS.UPDATE_GRAPH_STYLES, payload: { nodeStyles: updatedStyles } });
+  }
+
+  addNodeStyle = () => {
+    const newStyle = { property: '', value: '', color: '#000000' };
+    const updatedStyles = [...this.props.graphStyles.nodeStyles, newStyle];
+    this.props.dispatch({ type: ACTIONS.UPDATE_GRAPH_STYLES, payload: { nodeStyles: updatedStyles } });
   }
 
   render(){
@@ -225,6 +239,41 @@ class Details extends React.Component {
                 </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel>
+            <ExpansionPanel>
+              <ExpansionPanelSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography>Graph Styling</Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <Typography variant="h6">Node Styles</Typography>
+                    {this.props.graphStyles.nodeStyles.map((style, index) => (
+                      <div key={index}>
+                        <TextField
+                          label="Property"
+                          value={style.property}
+                          onChange={(e) => this.handleNodeStyleChange(index, 'property', e.target.value)}
+                        />
+                        <TextField
+                          label="Value"
+                          value={style.value}
+                          onChange={(e) => this.handleNodeStyleChange(index, 'value', e.target.value)}
+                        />
+                        <SketchPicker
+                          color={style.color}
+                          onChange={(color) => this.handleNodeStyleChange(index, 'color', color.hex)}
+                        />
+                      </div>
+                    ))}
+                    <Button onClick={this.addNodeStyle}>Add Node Style</Button>
+                  </Grid>
+                </Grid>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
           </Grid>
           {hasSelected &&
           <Grid item xs={12} sm={12} md={12}>
@@ -283,6 +332,7 @@ export const DetailsComponent = connect((state)=>{
     queryHistory: state.options.queryHistory,
     nodeLabels: state.options.nodeLabels,
     nodeLimit: state.options.nodeLimit,
-    isPhysicsEnabled: state.options.isPhysicsEnabled
+    isPhysicsEnabled: state.options.isPhysicsEnabled,
+    graphStyles: state.options.graphStyles
   };
 })(Details);
