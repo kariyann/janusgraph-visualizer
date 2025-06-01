@@ -17,6 +17,5 @@ const store = createStore(
   composeEnhancers(applyMiddleware(createLogger()))
 );
 
-//6. Render react element
 ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
 )
