@@ -83,6 +83,15 @@ export const reducer = function optionReducer(state = initialState, action) {
         }
       };
 
+    case ACTIONS.UPDATE_GRAPH_STYLES:
+      return {
+        ...state,
+        graphStyles: {
+          ...state.graphStyles,
+          ...action.payload
+        }
+      };
+
     default:
       return state;
   }
