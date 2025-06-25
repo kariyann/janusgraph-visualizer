@@ -51,6 +51,43 @@ class NetworkGraph extends React.Component {
     });
 
     this.props.dispatch({ type: ACTIONS.SET_NETWORK, payload: network });
+    this.applyGraphStyles();
+  }
+
+  componentDidUpdate() {
+    this.applyGraphStyles();
+  }
+
+  applyGraphStyles() {
+    const { nodeStyles, edgeStyles, defaultNodeColor, defaultEdgeColor } = this.props.graphStyles;
+
+    this.props.nodeHolder.forEach((node) => {
+      let update = { color: { background: defaultNodeColor } };
+      nodeStyles.forEach(style => {
+        if (node.properties && String(node.properties[style.property]) === style.value) {
+          update = {
+            color: { background: style.color },
+            shape: style.shape,
+            size: Number(style.size)
+          };
+        }
+      });
+      this.props.nodeHolder.update({ id: node.id, ...update });
+    });
+
+    this.props.edgeHolder.forEach((edge) => {
+      let update = { color: { color: defaultEdgeColor } };
+      edgeStyles.forEach(style => {
+        if (edge.properties && String(edge.properties[style.property]) === style.value) {
+          update = {
+            color: { color: style.color },
+            width: Number(style.width),
+            dashes: style.dashes
+          };
+        }
+      });
+      this.props.edgeHolder.update({ id: edge.id, ...update });
+    });
   }
 
   handleContextMenuClose = () => {

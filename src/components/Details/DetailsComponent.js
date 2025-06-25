@@ -133,10 +133,22 @@ class Details extends React.Component {
     this.props.dispatch({ type: ACTIONS.UPDATE_GRAPH_STYLES, payload: { nodeStyles: updatedStyles } });
   }
 
+  handleEdgeStyleChange(index, field, value) {
+    const updatedStyles = [...this.props.graphStyles.edgeStyles];
+    updatedStyles[index][field] = value;
+    this.props.dispatch({ type: ACTIONS.UPDATE_GRAPH_STYLES, payload: { edgeStyles: updatedStyles } });
+  }
+
   addNodeStyle = () => {
-    const newStyle = { property: '', value: '', color: '#000000' };
+    const newStyle = { property: '', value: '', color: '#000000', shape: 'dot', size: 25 };
     const updatedStyles = [...this.props.graphStyles.nodeStyles, newStyle];
     this.props.dispatch({ type: ACTIONS.UPDATE_GRAPH_STYLES, payload: { nodeStyles: updatedStyles } });
+  }
+
+  addEdgeStyle = () => {
+    const newStyle = { property: '', value: '', color: '#848484', width: 1, dashes: false };
+    const updatedStyles = [...this.props.graphStyles.edgeStyles, newStyle];
+    this.props.dispatch({ type: ACTIONS.UPDATE_GRAPH_STYLES, payload: { edgeStyles: updatedStyles } });
   }
 
   render(){
@@ -263,6 +275,17 @@ class Details extends React.Component {
                           value={style.value}
                           onChange={(e) => this.handleNodeStyleChange(index, 'value', e.target.value)}
                         />
+                        <TextField
+                          label="Shape"
+                          value={style.shape}
+                          onChange={(e) => this.handleNodeStyleChange(index, 'shape', e.target.value)}
+                        />
+                        <TextField
+                          label="Size"
+                          type="number"
+                          value={style.size}
+                          onChange={(e) => this.handleNodeStyleChange(index, 'size', e.target.value)}
+                        />
                         <SketchPicker
                           color={style.color}
                           onChange={(color) => this.handleNodeStyleChange(index, 'color', color.hex)}
@@ -270,6 +293,44 @@ class Details extends React.Component {
                       </div>
                     ))}
                     <Button onClick={this.addNodeStyle}>Add Node Style</Button>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography variant="h6">Edge Styles</Typography>
+                    {this.props.graphStyles.edgeStyles.map((style, index) => (
+                      <div key={index}>
+                        <TextField
+                          label="Property"
+                          value={style.property}
+                          onChange={(e) => this.handleEdgeStyleChange(index, 'property', e.target.value)}
+                        />
+                        <TextField
+                          label="Value"
+                          value={style.value}
+                          onChange={(e) => this.handleEdgeStyleChange(index, 'value', e.target.value)}
+                        />
+                        <TextField
+                          label="Width"
+                          type="number"
+                          value={style.width}
+                          onChange={(e) => this.handleEdgeStyleChange(index, 'width', e.target.value)}
+                        />
+                        <FormControlLabel
+                          control={
+                            <Switch
+                              checked={style.dashes}
+                              onChange={(e) => this.handleEdgeStyleChange(index, 'dashes', e.target.checked)}
+                              color="primary"
+                            />
+                          }
+                          label="Dashes"
+                        />
+                        <SketchPicker
+                          color={style.color}
+                          onChange={(color) => this.handleEdgeStyleChange(index, 'color', color.hex)}
+                        />
+                      </div>
+                    ))}
+                    <Button onClick={this.addEdgeStyle}>Add Edge Style</Button>
                   </Grid>
                 </Grid>
               </ExpansionPanelDetails>
